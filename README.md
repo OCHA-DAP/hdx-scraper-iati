@@ -118,4 +118,3 @@ Tests can be executed using:
 ```shell
     hatch test
 ```
->>>>>>> 0a86d39 (init dev)
