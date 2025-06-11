@@ -1,0 +1,48 @@
+base_url: "https://d-portal.org/dquery"
+title: "Current IATI Aid Activities in (country)"
+
+title_activities: IATI activities in (country) (no location information)
+description_activities: Currently-active IATI activities in (country), in 3W/4W style with HXL hashtags. This dataset contains one unique activity/sector combination on each row. It is suitable for counting the total number of reported activities, or for aggregating activities by sector, reporting organisation, etc.
+
+title_locations: IATI activity locations in (country)
+description_locations: Current IATI activity locations in (country), in 3W/4W style with HXL hashtags. This dataset contains one row per location, so activities with multiple locations are repeated, and activities without location information are omitted. It is suitable for applications that want to show activity locations on a map, or find the closest geolocated activities to a settlement or camp.
+
+tags:
+  - funding
+  - hxl
+  - who is doing what and where-3w-4w-5w
+
+hxl_tags:
+  "aid": "#meta+aid"
+  "reporting": "#date+reporting"
+  "reporting_ref": "#ref+reporting"
+  "funder_ref": "#ref+funder"
+  "title": "#meta+title"
+  "slug": "#meta+slug"
+  "status_code": "#meta+status+code"
+  "day_start": "#date+start"
+  "day_end": "#date+end"
+  "day_length": "#value+day+length"
+  "description": "#meta+description"
+  "commitment": "#value+commitment"
+  "spend": "#value+spend"
+  "commitment_eur": "#value+commitment+eur"
+  "spend_eur": "#value+spend+eur"
+  "commitment_gbp": "#value+commitment+gbp"
+  "spend_gbp": "#value+spend+gbp"
+  "commitment_cad": "#value+commitment+cad"
+  "spend_cad": "#value+spend+cad"
+  "flags": "#meta+flags"
+  "country_code": "#country+code"
+  "country_percent": "#value+country+percent"
+  "sector_group": "#sector+group"
+  "sector_code": "#sector+code"
+  "sector_percent": "#value+sector+percent"
+  "location_code": "#location+code"
+  "location_gazetteer_ref": "#ref+location+gazetteer"
+  "location_gazetteer": "#meta+location+gazetteer"
+  "location_name": "#meta+location+name"
+  "location_longitude": "#loc+lon"
+  "location_latitude": "#loc+lat"
+  "location_precision": "#meta+location+precision"
+  "location_percent": "#value+location+percent"

@@ -1,0 +1,18 @@
+license_id: hdx-other
+license_other: Allowed licenses for IATI reporting organisations are listed [here](https://iatistandard.org/en/guidance/preparing-organisation/organisation-data-publication/how-to-license-your-data/)
+methodology: Registry
+caveats: |
+  Information originates from multiple IATI reporting organisations, and has not been centrally vetted or audited for accuracy or consistency.
+
+  Includes only those activities from the [IATI Registry](https://iatiregistry.org/) that are included in [D-Portal](http://www.d-portal.org/ctrack.html#view=search) and have the status "Implementing".
+
+  The total number of activities may include duplicates, if (for example) a donor and an implementing partner both report the same activity under different IATI identifiers.
+
+  Start and end dates of activities within the dataset will differ.
+dataset_source: Various IATI reporting organisations http://www.d-portal.org/about.html#sources
+package_creator: HDX Data Systems Team
+private: False
+maintainer: 6b297b9d-ead6-458d-ae1b-1b9e9f61dd00 # iatistandard
+owner_org: 87f30a06-6085-473d-87d8-ab4c3aa36817 # iati
+data_update_frequency: 1
+notes: List of active aid activities for (country) shared via the International Aid Transparency Initiative (IATI). Includes both humanitarian and development activities. More information on each activity (including financial data) is available from [http://www.d-portal.org](http://www.d-portal.org)
