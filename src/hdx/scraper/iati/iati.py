@@ -3,13 +3,11 @@
 
 import logging
 from io import StringIO
-from typing import List
 from urllib.parse import urlencode
 
 import pandas as pd
 from hdx.api.configuration import Configuration
 from hdx.data.dataset import Dataset
-from hdx.location.country import Country
 from hdx.utilities.retriever import Retrieve
 from slugify import slugify
 
@@ -40,17 +38,16 @@ class IATI:
         self._retriever = retriever
         self._temp_dir = temp_dir
 
-    def get_countries(self) -> list:
-        """
-        Gets list of country iso2 codes from local json file
-        """
-        data_json = self._retriever.download_json("countries.json")
-        iso2_list = []
-        for item in data_json.get("data", []):
-            if "iso2" in item:
-                iso2_list.append(item["iso2"])
+    def get_date_range(self, df1: pd.DataFrame, df2: pd.DataFrame) -> dict:
+        df_combined = pd.concat([df1["day_start"], df2["day_start"]], ignore_index=True)
 
-        return iso2_list
+        df_combined = df_combined[df_combined.astype(str).str.strip() != ""]
+        df_combined = pd.to_datetime(df_combined, errors="coerce")
+        df_combined = df_combined.dropna()
+
+        min_date = df_combined.min()
+        max_date = df_combined.max()
+        return {"min_date": min_date, "max_date": max_date}
 
     def fetch_df(self, template: str, iso2: str, prefix: str) -> pd.DataFrame:
         """
@@ -61,7 +58,13 @@ class IATI:
         url = f"{self._configuration['base_url']}?{urlencode(params)}"
         filename = f"{prefix}-{iso2.lower()}.csv"
         raw_csv = self._retriever.download_text(url, filename)
-        df = pd.read_csv(StringIO(raw_csv))
+
+        try:
+            df = pd.read_csv(StringIO(raw_csv))
+        except pd.errors.EmptyDataError:
+            logger.warning("No data in CSV for %s", iso2)
+            return pd.DataFrame()
+
         return df.fillna("")
 
     def get_activities_data(self, iso2: str) -> pd.DataFrame:
@@ -70,76 +73,82 @@ class IATI:
     def get_locations_data(self, iso2: str) -> pd.DataFrame:
         return self.fetch_df(self.SQL_LOCATIONS, iso2, "iati-locations")
 
-    def generate_datasets(self) -> List[Dataset]:
-        datasets = []
-        countries = self.get_countries()
+    def generate_dataset(self, country) -> Dataset:
+        country_name = country["name"]
+        iso2 = country["iso2"]
+        iso3 = country["iso3"]
 
-        for iso2 in countries:
-            # Get data
-            df_activities = self.get_activities_data(iso2)
-            df_locations = self.get_locations_data(iso2)
+        # Get data
+        df_activities = self.get_activities_data(iso2)
+        df_locations = self.get_locations_data(iso2)
 
-            # min_date = df["day_start"].min()
-            # max_date = df["day_start"].max()
-
-            # Create dataset
-            country_name = Country.get_country_name_from_iso2(iso2)
-            title = self._configuration["title"].replace("(country)", country_name)
-            slugified_name = slugify(title)
-            logger.info(f"Creating dataset: {title}")
-            dataset = Dataset(
-                {
-                    "name": slugified_name,
-                    "title": title,
-                }
+        # Make sure data is not empty
+        if df_activities.empty or df_locations.empty:
+            logger.warning(
+                "Skipping %s: activities %s, locations %s",
+                iso2,
+                "empty" if df_activities.empty else "ok",
+                "empty" if df_locations.empty else "ok",
             )
-            dataset.add_country_location(country_name)
-            dataset.add_tags(self._configuration["tags"])
-            dataset.set_time_period("2019-01-01", "2020-01-01")
+            return
 
-            # Generate activities resource
-            resource_activities_name = self._configuration["title_activities"].replace(
-                "(country)", country_name
-            )
-            slug_activities = slugify(resource_activities_name)
-            resource_activities_data = {
-                "name": resource_activities_name,
-                "description": self._configuration["description_activities"].replace(
-                    "(country)", country_name
-                ),
-                "format": "CSV",
+        date_range = self.get_date_range(df_activities, df_locations)
+
+        # Create dataset
+        title = self._configuration["title"].replace("(country)", country_name)
+        slugified_name = f"iati-{iso3.lower()}"
+        logger.info(f"Creating dataset: {title}")
+        dataset = Dataset(
+            {
+                "name": slugified_name,
+                "title": title,
             }
-            dataset.generate_resource_from_iterable(
-                headers=df_activities.columns.tolist(),
-                iterable=df_activities.to_dict(orient="records"),
-                hxltags=self._configuration["hxl_tags"],
-                folder=self._temp_dir,
-                filename=f"{slug_activities}.csv",
-                resourcedata=resource_activities_data,
-                quickcharts=None,
-            )
+        )
+        dataset.add_country_location(country_name)
+        dataset.add_tags(self._configuration["tags"])
+        dataset.set_time_period(date_range["min_date"], date_range["max_date"])
 
-            # Generate locations resource
-            resource_locations_name = self._configuration["title_locations"].replace(
+        # Generate activities resource
+        resource_activities_name = self._configuration["title_activities"].replace(
+            "(country)", country_name
+        )
+        slug_activities = slugify(resource_activities_name)
+        resource_activities_data = {
+            "name": resource_activities_name,
+            "description": self._configuration["description_activities"].replace(
                 "(country)", country_name
-            )
-            slug_locations = slugify(resource_locations_name)
-            resource_locations_data = {
-                "name": resource_locations_name,
-                "description": self._configuration["description_locations"].replace(
-                    "(country)", country_name
-                ),
-            }
-            dataset.generate_resource_from_iterable(
-                headers=df_locations.columns.tolist(),
-                iterable=df_locations.to_dict(orient="records"),
-                hxltags=self._configuration["hxl_tags"],
-                folder=self._temp_dir,
-                filename=f"{slug_locations}.csv",
-                resourcedata=resource_locations_data,
-                quickcharts=None,
-            )
+            ),
+            "format": "CSV",
+        }
+        dataset.generate_resource_from_iterable(
+            headers=df_activities.columns.tolist(),
+            iterable=df_activities.to_dict(orient="records"),
+            hxltags=self._configuration["hxl_tags"],
+            folder=self._temp_dir,
+            filename=f"{slug_activities}.csv",
+            resourcedata=resource_activities_data,
+            quickcharts=None,
+        )
 
-            datasets.append(dataset)
+        # Generate locations resource
+        resource_locations_name = self._configuration["title_locations"].replace(
+            "(country)", country_name
+        )
+        slug_locations = slugify(resource_locations_name)
+        resource_locations_data = {
+            "name": resource_locations_name,
+            "description": self._configuration["description_locations"].replace(
+                "(country)", country_name
+            ),
+        }
+        dataset.generate_resource_from_iterable(
+            headers=df_locations.columns.tolist(),
+            iterable=df_locations.to_dict(orient="records"),
+            hxltags=self._configuration["hxl_tags"],
+            folder=self._temp_dir,
+            filename=f"{slug_locations}.csv",
+            resourcedata=resource_locations_data,
+            quickcharts=None,
+        )
 
-        return datasets
+        return dataset

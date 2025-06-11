@@ -10,6 +10,7 @@ from os.path import dirname, expanduser, join
 
 from hdx.api.configuration import Configuration
 from hdx.facades.infer_arguments import facade
+from hdx.location.country import Country
 from hdx.utilities.downloader import Download
 from hdx.utilities.path import (
     wheretostart_tempdir_batch,
@@ -26,7 +27,7 @@ _UPDATED_BY_SCRIPT = "HDX Scraper: iati"
 
 
 def main(
-    save: bool = True,
+    save: bool = False,
     use_saved: bool = False,
 ) -> None:
     """Generate datasets and create them in HDX
@@ -55,11 +56,29 @@ def main(
             # Steps to generate dataset
             #
 
+            countriesdata = Country.countriesdata()
+            countries = []
+            for iso3_key, attrs in countriesdata["countries"].items():
+                countries.append(
+                    {
+                        "iso2": attrs.get("#country+code+v_iso2"),
+                        "iso3": attrs.get("#country+code+v_iso3"),
+                        "name": attrs.get("#country+name+preferred"),
+                    }
+                )
+
             configuration = Configuration.read()
             iati = IATI(configuration, retriever, temp_dir)
-            datasets = iati.generate_datasets()
 
-            for dataset in datasets:
+            for country in countries[:5]:
+                dataset = iati.generate_dataset(country)
+
+                if dataset is None:
+                    logger.warning(
+                        "generate_dataset returned None for %s; skipping", country
+                    )
+                    continue
+
                 dataset.update_from_yaml(
                     path=join(dirname(__file__), "config", "hdx_dataset_static.yaml")
                 )
@@ -75,7 +94,6 @@ def main(
 if __name__ == "__main__":
     facade(
         main,
-        hdx_site="demo",
         user_agent_config_yaml=join(expanduser("~"), ".useragents.yaml"),
         user_agent_lookup=_USER_AGENT_LOOKUP,
         project_config_yaml=join(

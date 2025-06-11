@@ -1,38 +1,13 @@
 from os.path import join
 
-import pytest
-from hdx.api.configuration import Configuration
 from hdx.utilities.downloader import Download
 from hdx.utilities.path import temp_dir
 from hdx.utilities.retriever import Retrieve
-from hdx.utilities.useragent import UserAgent
 
 from hdx.scraper.iati.iati import IATI
 
 
 class TestIATI:
-    @pytest.fixture(scope="function")
-    def configuration(self, config_dir):
-        UserAgent.set_global("test")
-        Configuration._create(
-            hdx_read_only=True,
-            hdx_site="prod",
-            project_config_yaml=join(config_dir, "project_configuration.yaml"),
-        )
-        return Configuration.read()
-
-    @pytest.fixture(scope="class")
-    def fixtures_dir(self):
-        return join("tests", "fixtures")
-
-    @pytest.fixture(scope="class")
-    def input_dir(self, fixtures_dir):
-        return join(fixtures_dir, "input")
-
-    @pytest.fixture(scope="class")
-    def config_dir(self, fixtures_dir):
-        return join("src", "hdx", "scraper", "iati", "config")
-
     def test_iati(self, configuration, fixtures_dir, input_dir, config_dir):
         with temp_dir(
             "TestIATI",
@@ -51,8 +26,8 @@ class TestIATI:
 
                 iati = IATI(configuration, retriever, tempdir)
 
-                datasets = iati.generate_datasets()
-                dataset = datasets[0]
+                country = {"iso2": "AF", "iso3": "AFG", "name": "Afghanistan"}
+                dataset = iati.generate_dataset(country)
                 dataset.update_from_yaml(
                     path=join(config_dir, "hdx_dataset_static.yaml")
                 )
@@ -73,9 +48,9 @@ class TestIATI:
                     "\n"
                     "Start and end dates of activities within the dataset will "
                     "differ.\n",
-                    "name": "current-iati-aid-activities-in-afghanistan",
+                    "name": "iati-afg",
                     "title": "Current IATI Aid Activities in Afghanistan",
-                    "dataset_date": "[2019-01-01T00:00:00 TO 2020-01-01T23:59:59]",
+                    "dataset_date": "[1986-01-01T00:00:00 TO 2025-12-15T23:59:59]",
                     "tags": [
                         {
                             "name": "funding",
@@ -93,13 +68,13 @@ class TestIATI:
                     "license_id": "hdx-other",
                     "license_other": "Allowed licenses for IATI reporting organisations are listed [here](https://iatistandard.org/en/guidance/preparing-organisation/organisation-data-publication/how-to-license-your-data/)",
                     "methodology": "Registry",
-                    "dataset_source": "Various IATI reporting organisations",
+                    "dataset_source": "Various IATI reporting organisations http://www.d-portal.org/about.html#sources",
                     "groups": [{"name": "afg"}],
                     "package_creator": "HDX Data Systems Team",
                     "private": False,
                     "maintainer": "6b297b9d-ead6-458d-ae1b-1b9e9f61dd00",
                     "owner_org": "87f30a06-6085-473d-87d8-ab4c3aa36817",
-                    "data_update_frequency": 30,
+                    "data_update_frequency": 1,
                     "notes": "List of active aid activities for (country) shared via the International Aid Transparency Initiative (IATI). Includes both humanitarian and development activities. More information on each activity (including financial data) is available from [http://www.d-portal.org](http://www.d-portal.org)",
                 }
 
