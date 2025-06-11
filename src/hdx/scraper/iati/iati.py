@@ -41,23 +41,22 @@ class IATI:
     def get_date_range(
         self, df_activities: pd.DataFrame, df_locations: pd.DataFrame
     ) -> dict:
-        min_date = []
-        max_date = []
+        dates = []
+        for df in (df_activities, df_locations):
+            if "day_start" in df.columns and not df["day_start"].isna().all():
+                day_starts = pd.to_datetime(df["day_start"], errors="coerce")
+                dates.append(day_starts.min())
+                dates.append(day_starts.max())
 
-        if not df_activities.empty:
-            min_date.append(df_activities["day_start"].min())
-            max_date.append(df_activities["day_start"].max())
+        if not dates:
+            return {"min_date": None, "max_date": None}
 
-        if not df_locations.empty:
-            min_date.append(df_locations["day_start"].min())
-            max_date.append(df_locations["day_start"].max())
-
-        if not min_date:
-            logger.warning("No day_start data in activities or locations")
-
+        # Format dates
+        min_dt = min(d for d in dates if pd.notnull(d))
+        max_dt = max(d for d in dates if pd.notnull(d))
         return {
-            "min_date": min(min_date),
-            "max_date": max(max_date),
+            "min_date": min_dt.strftime("%Y-%m-%d"),
+            "max_date": max_dt.strftime("%Y-%m-%d"),
         }
 
     def fetch_df(self, template: str, iso2: str, prefix: str) -> pd.DataFrame:
@@ -112,6 +111,7 @@ class IATI:
         )
         dataset.add_country_location(country_name)
         dataset.add_tags(self._configuration["tags"])
+
         dataset.set_time_period(date_range["min_date"], date_range["max_date"])
 
         # Generate activities resource
