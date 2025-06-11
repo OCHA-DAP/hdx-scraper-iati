@@ -38,16 +38,27 @@ class IATI:
         self._retriever = retriever
         self._temp_dir = temp_dir
 
-    def get_date_range(self, df1: pd.DataFrame, df2: pd.DataFrame) -> dict:
-        df_combined = pd.concat([df1["day_start"], df2["day_start"]], ignore_index=True)
+    def get_date_range(
+        self, df_activities: pd.DataFrame, df_locations: pd.DataFrame
+    ) -> dict:
+        min_date = []
+        max_date = []
 
-        df_combined = df_combined[df_combined.astype(str).str.strip() != ""]
-        df_combined = pd.to_datetime(df_combined, errors="coerce")
-        df_combined = df_combined.dropna()
+        if not df_activities.empty:
+            min_date.append(df_activities["day_start"].min())
+            max_date.append(df_activities["day_start"].max())
 
-        min_date = df_combined.min()
-        max_date = df_combined.max()
-        return {"min_date": min_date, "max_date": max_date}
+        if not df_locations.empty:
+            min_date.append(df_locations["day_start"].min())
+            max_date.append(df_locations["day_start"].max())
+
+        if not min_date:
+            logger.warning("No day_start data in activities or locations")
+
+        return {
+            "min_date": min(min_date),
+            "max_date": max(max_date),
+        }
 
     def fetch_df(self, template: str, iso2: str, prefix: str) -> pd.DataFrame:
         """
@@ -62,7 +73,7 @@ class IATI:
         try:
             df = pd.read_csv(StringIO(raw_csv))
         except pd.errors.EmptyDataError:
-            logger.warning("No data in CSV for %s", iso2)
+            logger.warning("No %s data for %s", prefix, iso2)
             return pd.DataFrame()
 
         return df.fillna("")
@@ -83,14 +94,9 @@ class IATI:
         df_locations = self.get_locations_data(iso2)
 
         # Make sure data is not empty
-        if df_activities.empty or df_locations.empty:
-            logger.warning(
-                "Skipping %s: activities %s, locations %s",
-                iso2,
-                "empty" if df_activities.empty else "ok",
-                "empty" if df_locations.empty else "ok",
-            )
-            return
+        if df_activities.empty and df_locations.empty:
+            logger.warning("Skipping %s: both activities and locations are empty", iso2)
+            return None
 
         date_range = self.get_date_range(df_activities, df_locations)
 
@@ -109,46 +115,48 @@ class IATI:
         dataset.set_time_period(date_range["min_date"], date_range["max_date"])
 
         # Generate activities resource
-        resource_activities_name = self._configuration["title_activities"].replace(
-            "(country)", country_name
-        )
-        slug_activities = slugify(resource_activities_name)
-        resource_activities_data = {
-            "name": resource_activities_name,
-            "description": self._configuration["description_activities"].replace(
+        if not df_activities.empty:
+            resource_activities_name = self._configuration["title_activities"].replace(
                 "(country)", country_name
-            ),
-            "format": "CSV",
-        }
-        dataset.generate_resource_from_iterable(
-            headers=df_activities.columns.tolist(),
-            iterable=df_activities.to_dict(orient="records"),
-            hxltags=self._configuration["hxl_tags"],
-            folder=self._temp_dir,
-            filename=f"{slug_activities}.csv",
-            resourcedata=resource_activities_data,
-            quickcharts=None,
-        )
+            )
+            slug_activities = slugify(resource_activities_name)
+            resource_activities_data = {
+                "name": resource_activities_name,
+                "description": self._configuration["description_activities"].replace(
+                    "(country)", country_name
+                ),
+                "format": "CSV",
+            }
+            dataset.generate_resource_from_iterable(
+                headers=df_activities.columns.tolist(),
+                iterable=df_activities.to_dict(orient="records"),
+                hxltags=self._configuration["hxl_tags"],
+                folder=self._temp_dir,
+                filename=f"{slug_activities}.csv",
+                resourcedata=resource_activities_data,
+                quickcharts=None,
+            )
 
         # Generate locations resource
-        resource_locations_name = self._configuration["title_locations"].replace(
-            "(country)", country_name
-        )
-        slug_locations = slugify(resource_locations_name)
-        resource_locations_data = {
-            "name": resource_locations_name,
-            "description": self._configuration["description_locations"].replace(
+        if not df_locations.empty:
+            resource_locations_name = self._configuration["title_locations"].replace(
                 "(country)", country_name
-            ),
-        }
-        dataset.generate_resource_from_iterable(
-            headers=df_locations.columns.tolist(),
-            iterable=df_locations.to_dict(orient="records"),
-            hxltags=self._configuration["hxl_tags"],
-            folder=self._temp_dir,
-            filename=f"{slug_locations}.csv",
-            resourcedata=resource_locations_data,
-            quickcharts=None,
-        )
+            )
+            slug_locations = slugify(resource_locations_name)
+            resource_locations_data = {
+                "name": resource_locations_name,
+                "description": self._configuration["description_locations"].replace(
+                    "(country)", country_name
+                ),
+            }
+            dataset.generate_resource_from_iterable(
+                headers=df_locations.columns.tolist(),
+                iterable=df_locations.to_dict(orient="records"),
+                hxltags=self._configuration["hxl_tags"],
+                folder=self._temp_dir,
+                filename=f"{slug_locations}.csv",
+                resourcedata=resource_locations_data,
+                quickcharts=None,
+            )
 
         return dataset
