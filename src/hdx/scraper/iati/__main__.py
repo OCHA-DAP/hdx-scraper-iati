@@ -70,7 +70,7 @@ def main(
             configuration = Configuration.read()
             iati = IATI(configuration, retriever, temp_dir)
 
-            for country in countries[:5]:
+            for country in countries:
                 dataset = iati.generate_dataset(country)
 
                 if dataset is None:
