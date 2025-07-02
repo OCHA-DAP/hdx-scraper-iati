@@ -1,5 +1,5 @@
 base_url: "https://d-portal.org/dquery"
-title: "Current IATI Aid Activities in (country)"
+title: "(country) - Current IATI Aid Activities"
 
 title_activities: IATI activities in (country) (no location information)
 description_activities: Currently-active IATI activities in (country), in 3W/4W style with HXL hashtags. This dataset contains one unique activity/sector combination on each row. It is suitable for counting the total number of reported activities, or for aggregating activities by sector, reporting organisation, etc.
