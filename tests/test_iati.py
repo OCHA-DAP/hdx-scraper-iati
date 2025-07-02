@@ -49,7 +49,7 @@ class TestIATI:
                     "Start and end dates of activities within the dataset will "
                     "differ.\n",
                     "name": "iati-afg",
-                    "title": "Current IATI Aid Activities in Afghanistan",
+                    "title": "Afghanistan - Current IATI Aid Activities",
                     "dataset_date": "[1986-01-01T00:00:00 TO 2025-12-15T23:59:59]",
                     "tags": [
                         {
@@ -75,7 +75,7 @@ class TestIATI:
                     "maintainer": "6b297b9d-ead6-458d-ae1b-1b9e9f61dd00",
                     "owner_org": "87f30a06-6085-473d-87d8-ab4c3aa36817",
                     "data_update_frequency": 1,
-                    "notes": "List of active aid activities for (country) shared via the International Aid Transparency Initiative (IATI). Includes both humanitarian and development activities. More information on each activity (including financial data) is available from [http://www.d-portal.org](http://www.d-portal.org)",
+                    "notes": "List of active aid activities shared via the International Aid Transparency Initiative (IATI). Includes both humanitarian and development activities. More information on each activity (including financial data) is available from [http://www.d-portal.org](http://www.d-portal.org)",
                 }
 
                 resources = dataset.get_resources()
