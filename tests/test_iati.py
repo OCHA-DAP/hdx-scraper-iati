@@ -33,8 +33,9 @@ class TestIATI:
                 )
 
                 assert dataset == {
-                    "caveats": "Information originates from multiple IATI reporting "
-                    "organisations, and has not been centrally vetted or audited for "
+                    "caveats": "Information originates from various "
+                    "[IATI reporting organisations](http://www.d-portal.org/about.html#sources), "
+                    "and has not been centrally vetted or audited for "
                     "accuracy or consistency.\n"
                     "\n"
                     "Includes only those activities from the [IATI "
@@ -68,7 +69,7 @@ class TestIATI:
                     "license_id": "hdx-other",
                     "license_other": "Allowed licenses for IATI reporting organisations are listed [here](https://iatistandard.org/en/guidance/preparing-organisation/organisation-data-publication/how-to-license-your-data/)",
                     "methodology": "Registry",
-                    "dataset_source": "Various IATI reporting organisations http://www.d-portal.org/about.html#sources",
+                    "dataset_source": "Various IATI reporting organisations",
                     "groups": [{"name": "afg"}],
                     "package_creator": "HDX Data Systems Team",
                     "private": False,
