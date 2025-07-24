@@ -40,15 +40,14 @@ class TestIATI:
                     "\n"
                     "Includes only those activities from the [IATI "
                     "Registry](https://iatiregistry.org/) that are included in "
-                    "[D-Portal](http://www.d-portal.org/ctrack.html#view=search) and "
-                    'have the status "Implementing".\n'
+                    "[D-Portal](http://www.d-portal.org/ctrack.html#view=search).\n"
                     "\n"
                     "The total number of activities may include duplicates, if (for "
                     "example) a donor and an implementing partner both report the same "
                     "activity under different IATI identifiers.\n"
                     "\n"
-                    "Start and end dates of activities within the dataset will "
-                    "differ.\n",
+                    "The data is automatically checked every day for any updates, and "
+                    "the dataset is updated when any changes are found.\n",
                     "name": "iati-afg",
                     "title": "Afghanistan - Current IATI Aid Activities",
                     "dataset_date": "[1986-01-01T00:00:00 TO 2025-12-15T23:59:59]",
@@ -75,7 +74,7 @@ class TestIATI:
                     "private": False,
                     "maintainer": "6b297b9d-ead6-458d-ae1b-1b9e9f61dd00",
                     "owner_org": "87f30a06-6085-473d-87d8-ab4c3aa36817",
-                    "data_update_frequency": 1,
+                    "data_update_frequency": -2,
                     "notes": "List of active aid activities shared via the International Aid Transparency Initiative (IATI). Includes both humanitarian and development activities. More information on each activity (including financial data) is available from [http://www.d-portal.org](http://www.d-portal.org)",
                 }
 
