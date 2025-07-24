@@ -8,7 +8,7 @@ attrs==25.3.0
     #   jsonlines
     #   jsonschema
     #   referencing
-certifi==2025.6.15
+certifi==2025.7.14
     # via requests
 chardet==5.2.0
     # via frictionless
@@ -34,11 +34,11 @@ et-xmlfile==2.0.0
     # via openpyxl
 frictionless==5.18.1
     # via hdx-python-utilities
-hdx-python-api==6.4.5
+hdx-python-api==6.4.6
     # via hdx-scraper-iati (pyproject.toml)
-hdx-python-country==3.9.5
+hdx-python-country==3.9.6
     # via hdx-python-api
-hdx-python-utilities==3.8.7
+hdx-python-utilities==3.8.8
     # via
     #   hdx-scraper-iati (pyproject.toml)
     #   hdx-python-api
@@ -61,7 +61,7 @@ jsonlines==4.0.0
     # via hdx-python-utilities
 jsonpath-ng==1.7.0
     # via libhxl
-jsonschema==4.24.0
+jsonschema==4.25.0
     # via
     #   frictionless
     #   tableschema-to-template
@@ -87,13 +87,13 @@ more-itertools==10.7.0
     # via inflect
 num2words==0.5.14
     # via quantulum3
-numpy==2.3.1
+numpy==2.3.2
     # via pandas
 openpyxl==3.1.5
     # via hdx-python-utilities
-pandas==2.3.0
+pandas==2.3.1
     # via hdx-scraper-iati (pyproject.toml)
-petl==1.7.16
+petl==1.7.17
     # via frictionless
 ply==3.11
     # via
@@ -186,7 +186,7 @@ typeguard==4.4.4
     # via inflect
 typer==0.16.0
     # via frictionless
-typing-extensions==4.14.0
+typing-extensions==4.14.1
     # via
     #   frictionless
     #   pydantic
