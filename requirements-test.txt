@@ -11,7 +11,7 @@ attrs==25.3.0
     #   jsonlines
     #   jsonschema
     #   referencing
-certifi==2025.7.14
+certifi==2025.8.3
     # via
     #   -c requirements.txt
     #   requests
@@ -19,7 +19,7 @@ chardet==5.2.0
     # via
     #   -c requirements.txt
     #   frictionless
-charset-normalizer==3.4.2
+charset-normalizer==3.4.3
     # via
     #   -c requirements.txt
     #   requests
@@ -31,7 +31,7 @@ click==8.2.1
     # via
     #   -c requirements.txt
     #   typer
-coverage==7.10.0
+coverage==7.10.3
     # via pytest-cov
 defopt==7.0.0
     # via
@@ -46,7 +46,7 @@ docopt==0.6.2
     #   -c requirements.txt
     #   ckanapi
     #   num2words
-docutils==0.21.2
+docutils==0.22
     # via
     #   -c requirements.txt
     #   defopt
@@ -62,7 +62,7 @@ frictionless==5.18.1
     # via
     #   -c requirements.txt
     #   hdx-python-utilities
-hdx-python-api==6.4.6
+hdx-python-api==6.4.7
     # via
     #   -c requirements.txt
     #   hdx-scraper-iati (pyproject.toml)
@@ -70,7 +70,7 @@ hdx-python-country==3.9.6
     # via
     #   -c requirements.txt
     #   hdx-python-api
-hdx-python-utilities==3.8.8
+hdx-python-utilities==3.9.0
     # via
     #   -c requirements.txt
     #   hdx-scraper-iati (pyproject.toml)
@@ -133,11 +133,11 @@ makefun==1.16.0
     # via
     #   -c requirements.txt
     #   hdx-python-api
-markdown-it-py==3.0.0
+markdown-it-py==4.0.0
     # via
     #   -c requirements.txt
     #   rich
-marko==2.1.4
+marko==2.2.0
     # via
     #   -c requirements.txt
     #   frictionless
@@ -265,11 +265,11 @@ rfc3986==2.0.0
     # via
     #   -c requirements.txt
     #   frictionless
-rich==14.0.0
+rich==14.1.0
     # via
     #   -c requirements.txt
     #   typer
-rpds-py==0.26.0
+rpds-py==0.27.0
     # via
     #   -c requirements.txt
     #   jsonschema
