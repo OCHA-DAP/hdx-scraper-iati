@@ -84,14 +84,10 @@ class TestIATI:
                         "name": "IATI activities in Afghanistan (no location information)",
                         "description": "Currently-active IATI activities in Afghanistan, in 3W/4W style with HXL hashtags. This dataset contains one unique activity/sector combination on each row. It is suitable for counting the total number of reported activities, or for aggregating activities by sector, reporting organisation, etc.",
                         "format": "csv",
-                        "resource_type": "file.upload",
-                        "url_type": "upload",
                     },
                     {
                         "name": "IATI activity locations in Afghanistan",
                         "description": "Current IATI activity locations in Afghanistan, in 3W/4W style with HXL hashtags. This dataset contains one row per location, so activities with multiple locations are repeated, and activities without location information are omitted. It is suitable for applications that want to show activity locations on a map, or find the closest geolocated activities to a settlement or camp.",
                         "format": "csv",
-                        "resource_type": "file.upload",
-                        "url_type": "upload",
                     },
                 ]
