@@ -70,7 +70,7 @@ def main(
             configuration = Configuration.read()
             iati = IATI(configuration, retriever, temp_dir)
 
-            for country in countries[64:]:
+            for country in countries:
                 dataset = iati.generate_dataset(country)
 
                 if dataset is None:
@@ -94,7 +94,7 @@ def main(
 if __name__ == "__main__":
     facade(
         main,
-        hdx_site="demo",
+        # hdx_site="demo",
         user_agent_config_yaml=join(expanduser("~"), ".useragents.yaml"),
         user_agent_lookup=_USER_AGENT_LOOKUP,
         project_config_yaml=join(
