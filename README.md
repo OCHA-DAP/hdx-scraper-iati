@@ -3,7 +3,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/OCHA-DAP/hdx-scraper-iati/badge.svg?branch=main&ts=1)](https://coveralls.io/github/OCHA-DAP/hdx-scraper-iati?branch=main)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
-These datasets contain 3W-style data from IATI (the International Aid Transparency Initiative). The data comes from the D-Portal API, including only current activities. This script runs every day.
+These datasets contain 3W-style data from IATI (the International Aid Transparency Initiative). The data comes from the D-Portal API and creates one dataset with two resources per country containing current aid activity data. This script runs every day.
 
 ## Development
 
