@@ -8,6 +8,7 @@ from urllib.parse import urlencode
 import pandas as pd
 from hdx.api.configuration import Configuration
 from hdx.data.dataset import Dataset
+from hdx.utilities.downloader import DownloadError
 from hdx.utilities.retriever import Retrieve
 from slugify import slugify
 
@@ -67,7 +68,12 @@ class IATI:
         params = {"form": "csv", "human": "1", "sql": sql}
         url = f"{self._configuration['base_url']}?{urlencode(params)}"
         filename = f"{prefix}-{iso2.lower()}.csv"
-        raw_csv = self._retriever.download_text(url, filename)
+
+        try:
+            raw_csv = self._retriever.download_text(url, filename)
+        except DownloadError as e:
+            logger.error("Download failed for %s (%s), skipping", url, e, iso2)
+            return pd.DataFrame()
 
         try:
             df = pd.read_csv(StringIO(raw_csv))
