@@ -66,9 +66,10 @@ hdx-python-api==6.6.4
     # via
     #   -c requirements.txt
     #   hdx-scraper-iati (pyproject.toml)
-hdx-python-country==4.0.1
+hdx-python-country==4.1.0
     # via
     #   -c requirements.txt
+    #   hdx-scraper-iati (pyproject.toml)
     #   hdx-python-api
 hdx-python-utilities==4.0.4
     # via
