@@ -61,9 +61,9 @@ def main(
             for iso3_key, attrs in countriesdata["countries"].items():
                 countries.append(
                     {
-                        "iso2": attrs.get("#country+code+v_iso2"),
-                        "iso3": attrs.get("#country+code+v_iso3"),
-                        "name": attrs.get("#country+name+preferred"),
+                        "iso2": attrs.get("ISO 3166-1 Alpha 2-Codes"),
+                        "iso3": attrs.get("ISO 3166-1 Alpha 3-Codes"),
+                        "name": attrs.get("Preferred Term"),
                     }
                 )
 
