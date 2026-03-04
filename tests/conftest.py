@@ -45,7 +45,6 @@ def configuration(config_dir):
             # Change tags below to match those needed in tests
             for tag in (
                 "funding",
-                "hxl",
                 "who is doing what and where-3w-4w-5w",
             )
         ],

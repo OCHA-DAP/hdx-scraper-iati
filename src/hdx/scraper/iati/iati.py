@@ -133,14 +133,12 @@ class IATI:
                 ),
                 "format": "CSV",
             }
-            dataset.generate_resource_from_iterable(
-                headers=df_activities.columns.tolist(),
-                iterable=df_activities.to_dict(orient="records"),
-                hxltags=self._configuration["hxl_tags"],
+            dataset.generate_resource(
                 folder=self._temp_dir,
                 filename=f"{slug_activities}.csv",
+                rows=df_activities.to_dict(orient="records"),
                 resourcedata=resource_activities_data,
-                quickcharts=None,
+                headers=df_activities.columns.tolist(),
             )
 
         # Generate locations resource
@@ -155,14 +153,12 @@ class IATI:
                     "(country)", country_name
                 ),
             }
-            dataset.generate_resource_from_iterable(
-                headers=df_locations.columns.tolist(),
-                iterable=df_locations.to_dict(orient="records"),
-                hxltags=self._configuration["hxl_tags"],
+            dataset.generate_resource(
                 folder=self._temp_dir,
                 filename=f"{slug_locations}.csv",
+                rows=df_locations.to_dict(orient="records"),
                 resourcedata=resource_locations_data,
-                quickcharts=None,
+                headers=df_locations.columns.tolist(),
             )
 
         return dataset
